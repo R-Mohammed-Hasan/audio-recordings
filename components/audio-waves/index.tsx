@@ -12,7 +12,7 @@ export const AUDIO_SKIPPABLE_DURATION = 10;
 
 const CallRecording = () => {
   const waveformContainer = useRef(null);
-  const waveSurfaceInstance = useRef(null);
+  const waveSurfaceInstance = useRef<null | any>(null);
   const [isLoading, setisLoading] = useState<boolean>(true);
   const [volume, setVolume] = useState(0.5);
   const [playing, setPlay] = useState(false);
@@ -22,35 +22,35 @@ const CallRecording = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 1.35);
-      gradient.addColorStop(0, "#91C4FF"); // Top color
-      gradient.addColorStop((canvas.height * 0.7) / canvas.height, "#91C4FF");
-      gradient.addColorStop(
+      const gradient = ctx?.createLinearGradient(0, 0, 0, canvas.height * 1.35);
+      gradient?.addColorStop(0, "#91C4FF"); // Top color
+      gradient?.addColorStop((canvas.height * 0.7) / canvas.height, "#91C4FF");
+      gradient?.addColorStop(
         (canvas.height * 0.7 + 1) / canvas.height,
         "transparent"
       );
-      gradient.addColorStop(
+      gradient?.addColorStop(
         (canvas.height * 0.7 + 2) / canvas.height,
         "transparent"
       );
 
       // Progress gradient
-      const progressGradient = ctx.createLinearGradient(
+      const progressGradient = ctx?.createLinearGradient(
         0,
         0,
         0,
         canvas.height * 1.35
       );
-      progressGradient.addColorStop(0, "#0077ff"); // Top color
-      progressGradient.addColorStop(
+      progressGradient?.addColorStop(0, "#0077ff"); // Top color
+      progressGradient?.addColorStop(
         (canvas.height * 0.7) / canvas.height,
         "#0077ff"
       ); // Top color
-      progressGradient.addColorStop(
+      progressGradient?.addColorStop(
         (canvas.height * 0.7 + 1) / canvas.height,
         "#91C4FF"
       ); // White line
-      progressGradient.addColorStop(
+      progressGradient?.addColorStop(
         (canvas.height * 0.7 + 2) / canvas.height,
         "#E6F1FE"
       );
