@@ -1,8 +1,8 @@
-#waveform {
+.waveform {
   cursor: pointer;
   position: relative;
 }
-#hover {
+.hover {
   position: absolute;
   left: 0;
   top: 0;
@@ -16,12 +16,12 @@
   transition: opacity 0.2s ease;
 }
 
-#waveform:hover #hover {
+.waveform:hover #hover {
   opacity: 1;
 }
 
-#time,
-#duration {
+.time,
+.duration {
   position: absolute;
   z-index: 11;
   top: 90%;
@@ -34,10 +34,10 @@
   padding: 0px 5px;
   color: #ffffff;
 }
-#time {
+.time {
   left: 0;
 }
-#duration {
+.duration {
   right: 0;
 }
 

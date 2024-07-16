@@ -10,7 +10,7 @@ import { PlayCircleIcon } from "../icons/play-circle";
 
 export const AUDIO_SKIPPABLE_DURATION = 10;
 
-const CallRecording = () => {
+const CallRecording = ({ id, audioUrl }) => {
   const waveformContainer = useRef(null);
   const waveSurfaceInstance = useRef<null | any>(null);
   const [isLoading, setisLoading] = useState<boolean>(true);
@@ -60,13 +60,15 @@ const CallRecording = () => {
         progressColor: progressGradient,
         barWidth: 5,
         height: 135,
-        url: "/audio.mp3",
+        url: audioUrl,
         barRadius: 10,
         interact: true,
       });
       waveformContainer.current?.setAttribute("tabindex", "0");
-      const hover = document.querySelector("#hover") as HTMLElement;
-      const wavesurfer = document.querySelector("#waveform") as HTMLElement;
+      const hover = document.querySelector(`#hover-${id}`) as HTMLElement;
+      const wavesurfer = document.querySelector(
+        `#waveform-${id}`
+      ) as HTMLElement;
       wavesurfer.addEventListener(
         "pointermove",
         (e) => (hover.style.width = `${e.offsetX}px`)
@@ -76,8 +78,8 @@ const CallRecording = () => {
         (e) => (hover.style.width = `0px`)
       );
 
-      const timeEl = document.querySelector("#time");
-      const durationEl = document.querySelector("#duration");
+      const timeEl = document.querySelector(`#time-${id}`);
+      const durationEl = document.querySelector(`#duration-${id}`);
       waveSurfaceInstance.current?.on(
         "decode",
         (duration) => (durationEl.textContent = formatTime(duration))
@@ -89,8 +91,8 @@ const CallRecording = () => {
 
       // Currently playing audio indicator (Prgress bar & marker)
       waveSurfaceInstance.current?.on("audioprocess", (currentTime) => {
-        const marker = document.getElementById("playback-marker");
-        const progressBar = document.getElementById("progress-bar");
+        const marker = document.getElementById(`playback-marker-${id}`);
+        const progressBar = document.getElementById(`progress-bar-${id}`);
         if (marker && waveSurfaceInstance.current) {
           const duration = waveSurfaceInstance.current.getDuration();
           const waveformWidth = waveformContainer.current.offsetWidth;
@@ -105,8 +107,8 @@ const CallRecording = () => {
       });
 
       waveSurfaceInstance.current?.on("seeking", (progress) => {
-        const progressBar = document.getElementById("progress-bar");
-        const marker = document.getElementById("playback-marker");
+        const progressBar = document.getElementById(`progress-bar-${id}`);
+        const marker = document.getElementById(`playback-marker-${id}`);
         if (progressBar && marker && waveSurfaceInstance.current) {
           const totalDurationInSeconds =
             waveSurfaceInstance.current?.getDuration();
@@ -123,8 +125,8 @@ const CallRecording = () => {
       waveSurfaceInstance.current?.on("loading", () => setisLoading(true));
       waveSurfaceInstance.current?.on("ready", () => {
         setisLoading(false);
-        const marker = document.getElementById("playback-marker");
-        const progressBar = document.getElementById("progress-bar");
+        const marker = document.getElementById(`playback-marker-${id}`);
+        const progressBar = document.getElementById(`progress-bar-${id}`);
         if (marker) {
           marker.style.left = "0px";
           marker.style.display = "none"; // Hide marker until playback starts
@@ -134,9 +136,11 @@ const CallRecording = () => {
 
       // Audio controls
       const forwardButton = document.querySelector(
-        "#forward-btn"
+        `#forward-btn-${id}`
       ) as HTMLElement;
-      const backButton = document.querySelector("#backward-btn") as HTMLElement;
+      const backButton = document.querySelector(
+        `#backward-btn-${id}`
+      ) as HTMLElement;
 
       forwardButton.onclick = () => {
         waveSurfaceInstance.current?.skip(AUDIO_SKIPPABLE_DURATION);
@@ -185,19 +189,23 @@ const CallRecording = () => {
     <div className="relative h-[200px]">
       {isLoading && <Spinner className="w-full absolute top-5" />}
       <div
-        id="waveform"
+        id={`waveform-${id}`}
         ref={waveformContainer}
-        className="max-h-[100px] border-b-2 relative outline-none"
+        className="waveform max-h-[100px] border-b-2 relative outline-none"
       >
-        <div id="time">0:00</div>
-        <div id="duration">0:00</div>
-        <div id="hover"></div>
+        <div id={`time-${id}`} className="time">
+          0:00
+        </div>
+        <div id={`duration-${id}`} className="duration">
+          0:00
+        </div>
+        <div id={`hover-${id}`} className="hover"></div>
         <div
-          id="playback-marker"
+          id={`playback-marker-${id}`}
           className="absolute top-[66px] w-3 h-3 rounded-large bg-[#ffffff] hidden border-1 border-blue-500 z-50"
         />
         <div
-          id="progress-bar"
+          id={`progress-bar-${id}`}
           className="absolute bg-blue-500 top-[70px] h-1 left-0 z-50"
           style={{ width: "0%" }}
         ></div>
@@ -213,7 +221,7 @@ const CallRecording = () => {
               className="data-[hover]:bg-foreground/10"
               radius="full"
               variant="light"
-              id="backward-btn"
+              id={`backward-btn-${id}`}
             >
               <PreviousIcon />
             </Button>
@@ -231,7 +239,7 @@ const CallRecording = () => {
             </Button>
             <Button
               isIconOnly
-              id="forward-btn"
+              id={`forward-btn-${id}`}
               className="data-[hover]:bg-foreground/10"
               radius="full"
               variant="light"
@@ -242,17 +250,17 @@ const CallRecording = () => {
           <div className="volume-control flex justify-center items-center w-10 h-full relative">
             <div className="volume-icon w-full cursor-pointer relative">
               <div className="volume-slider h-[30px] cursor-pointer hidden absolute -rotate-90">
-              <input
-                type="range"
-                id="volume"
-                className=""
-                name="volume"
-                min="0.01"
-                max="1"
-                step=".025"
-                onChange={onVolumeChange}
-                defaultValue={volume}
-              />
+                <input
+                  type="range"
+                  id="volume"
+                  className=""
+                  name="volume"
+                  min="0.01"
+                  max="1"
+                  step=".025"
+                  onChange={onVolumeChange}
+                  defaultValue={volume}
+                />
               </div>
               <SoundIcon />
             </div>

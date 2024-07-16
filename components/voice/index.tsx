@@ -6,7 +6,7 @@ import { PauseCircleIcon } from "../icons/pause-circle";
 import { PreviousIcon } from "../icons/previous";
 import CallRecording from "../audio-waves";
 
-export default function AudioCard() {
+export default function AudioCard({ audioUrl, id }) {
   const [liked, setLiked] = React.useState(false);
 
   return (
@@ -49,7 +49,7 @@ export default function AudioCard() {
             </div>
 
             <div className="flex flex-col mt-3 gap-1">
-              <CallRecording />
+              <CallRecording id={id} audioUrl={audioUrl} />
             </div>
           </div>
         </div>
